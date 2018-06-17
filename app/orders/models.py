@@ -10,12 +10,12 @@ from django.db import models
 
 class Order(models.Model):
     id = models.SmallIntegerField(primary_key=True, db_column='orderid')
-    customer = models.ForeignKey('Customer', models.DO_NOTHING, db_column='customerid', blank=True, null=True)
-    employee = models.ForeignKey('Employee', models.DO_NOTHING, db_column='employeeid', blank=True, null=True)
+    customer = models.ForeignKey('users.Customer', models.DO_NOTHING, db_column='customerid', blank=True, null=True)
+    employee = models.ForeignKey('users.Employee', models.DO_NOTHING, db_column='employeeid', blank=True, null=True)
     order_date = models.DateField(db_column='orderdate', blank=True, null=True)
     required_date = models.DateField(db_column='requireddate', blank=True, null=True)
     shipped_date = models.DateField(db_column='shippeddate', blank=True, null=True)
-    ship_via = models.ForeignKey('Shipper', models.DO_NOTHING, db_column='shipvia', blank=True, null=True)
+    ship_via = models.ForeignKey('users.Shipper', models.DO_NOTHING, db_column='shipvia', blank=True, null=True)
     freight = models.FloatField(blank=True, null=True)
 
     ship_name = models.CharField(db_column='shipname', max_length=40, blank=True, null=True)
@@ -31,8 +31,8 @@ class Order(models.Model):
 
 
 class OrderDetail(models.Model):
-    id = models.ForeignKey(Order, models.DO_NOTHING, db_column='orderid', primary_key=True)
-    product = models.ForeignKey('Product', models.DO_NOTHING, db_column='productid')
+    id = models.OneToOneField(Order, models.DO_NOTHING, db_column='orderid', primary_key=True)
+    product = models.OneToOneField('products.Product', models.DO_NOTHING, db_column='productid')
     unit_price = models.FloatField(db_column='unitprice')
     quantity = models.SmallIntegerField(db_column='quantity')
     discount = models.FloatField(db_column='discount')
@@ -40,6 +40,3 @@ class OrderDetail(models.Model):
     class Meta:
         managed = False
         db_table = 'order_details'
-        unique_together = (
-            ('id', 'product'),
-        )

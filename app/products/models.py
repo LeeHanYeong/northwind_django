@@ -24,6 +24,9 @@ class Product(models.Model):
         managed = False
         db_table = 'products'
 
+    def __str__(self):
+        return self.name
+
 
 class Supplier(models.Model):
     id = models.SmallIntegerField(primary_key=True, db_column='supplierid')
@@ -43,6 +46,9 @@ class Supplier(models.Model):
         managed = False
         db_table = 'suppliers'
 
+    def __str__(self):
+        return self.company_name
+
 
 class Category(models.Model):
     id = models.SmallIntegerField(primary_key=True, db_column='categoryid')
@@ -53,3 +59,6 @@ class Category(models.Model):
     class Meta:
         managed = False
         db_table = 'categories'
+
+    def __str__(self):
+        return self.name

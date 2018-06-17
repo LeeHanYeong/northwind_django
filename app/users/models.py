@@ -16,6 +16,9 @@ class Region(models.Model):
         managed = False
         db_table = 'region'
 
+    def __str__(self):
+        return self.description
+
 
 class Territory(models.Model):
     id = models.CharField(db_column='territoryid', primary_key=True, max_length=20)
@@ -26,17 +29,17 @@ class Territory(models.Model):
         managed = False
         db_table = 'territories'
 
+    def __str__(self):
+        return self.description
+
 
 class EmployeeTerritory(models.Model):
-    id = models.ForeignKey('Employee', models.DO_NOTHING, db_column='employeeid', primary_key=True)
-    territory = models.ForeignKey(Territory, models.DO_NOTHING, db_column='territoryid')
+    id = models.OneToOneField('Employee', models.DO_NOTHING, db_column='employeeid', primary_key=True)
+    territory = models.OneToOneField(Territory, models.DO_NOTHING, db_column='territoryid')
 
     class Meta:
         managed = False
         db_table = 'employeeterritories'
-        unique_together = (
-            ('id', 'territory'),
-        )
 
 
 class Employee(models.Model):
@@ -65,7 +68,7 @@ class Employee(models.Model):
 
 
 class Customer(models.Model):
-    id = models.CharField(primary_key=True, max_length=-1, db_column='customerid')
+    id = models.CharField(primary_key=True, max_length=10, db_column='customerid')
     company_name = models.CharField(max_length=40, db_column='companyname')
     contact_name = models.CharField(max_length=30, blank=True, null=True, db_column='contactname')
     contact_title = models.CharField(max_length=30, blank=True, null=True, db_column='contacttitle')
@@ -81,17 +84,17 @@ class Customer(models.Model):
         managed = False
         db_table = 'customers'
 
+    def __str__(self):
+        return self.company_name
+
 
 class CustomerDemo(models.Model):
-    id = models.ForeignKey(Customer, models.DO_NOTHING, db_column='customerid', primary_key=True)
-    customer_type = models.ForeignKey('CustomerType', models.DO_NOTHING, db_column='customertypeid')
+    id = models.OneToOneField(Customer, models.DO_NOTHING, db_column='customerid', primary_key=True)
+    customer_type = models.OneToOneField('CustomerType', models.DO_NOTHING, db_column='customertypeid')
 
     class Meta:
         managed = False
         db_table = 'customercustomerdemo'
-        unique_together = (
-            ('id', 'customer_type'),
-        )
 
 
 class CustomerType(models.Model):
@@ -102,6 +105,9 @@ class CustomerType(models.Model):
         managed = False
         db_table = 'customerdemographics'
 
+    def __str__(self):
+        return self.description
+
 
 class Shipper(models.Model):
     id = models.SmallIntegerField(primary_key=True, db_column='shipperid')
@@ -111,3 +117,6 @@ class Shipper(models.Model):
     class Meta:
         managed = False
         db_table = 'shippers'
+
+    def __str__(self):
+        return self.company_name
